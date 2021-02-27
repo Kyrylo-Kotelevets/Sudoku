@@ -15,7 +15,7 @@ The best solution is to write down the candidate numbers at the top of the left 
 
 Below are examples of rendered puzzles in different variations:
 ## Classic solved puzzle
-![there must be a beatiful image](https://github.com/Kyrylo-Kotelevets/Sudoku/blob/main/files/sudoku_solved.png)
+![there must be a beatiful image](https://github.com/Kyrylo-Kotelevets/Sudoku/blob/main/files/solved_and_empty.png)
  
 ## Themes variations
 ![there must be a beatiful image](https://github.com/Kyrylo-Kotelevets/Sudoku/blob/main/files/themes.png)
