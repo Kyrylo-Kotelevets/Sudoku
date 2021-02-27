@@ -98,6 +98,7 @@ THEMES = {
 
 
 def draw_highlight(x, y, theme, color, image):
+	''' Рисует подсветку клетки '''
 	drawer = ImageDraw.Draw(image)
 	if theme['highlight'] == 'rectangle':
 		drawer.rectangle(R(x, y), fill=color)
@@ -105,7 +106,8 @@ def draw_highlight(x, y, theme, color, image):
 		drawer.ellipse(R(x, y), fill=color)
 
 
-def fill_possible(theme, x0: int, y0: int, puzz: list, image):
+def fill_possible(theme, x0: int, y0: int, puzz, image):
+	''' Отображает вставки в клетке '''
 	drawer = ImageDraw.Draw(image)
 	possible = sudoku.possible_matrix(puzzle=puzz.puzzle,
 									  row=y0,
@@ -125,6 +127,7 @@ def fill_possible(theme, x0: int, y0: int, puzz: list, image):
 
 
 def color_blocks(theme, image):
+	''' Подсвечивает нечетные блоки '''
 	drawer = ImageDraw.Draw(image)
 
 	for i in range(3):
@@ -134,6 +137,7 @@ def color_blocks(theme, image):
 
 
 def fill_grid(theme, image):
+	''' Рисует сетку '''
 	drawer = ImageDraw.Draw(image)
 	for i in range(10):
 		if i % 3:
@@ -145,6 +149,7 @@ def fill_grid(theme, image):
 
 
 def fill_partly_grid(theme, image):
+	''' Рисует сетку с прорехами '''
 	drawer = ImageDraw.Draw(image)
 	partly_pad = 20
 	for i in range(10):
@@ -158,7 +163,8 @@ def fill_partly_grid(theme, image):
 				drawer.rectangle([(0, G(i)), (im_size, G(i) + b_border)], fill=theme['grid_color'])
 
 
-def fill_ivalid(theme, puzzle: list, current: list, image):
+def fill_ivalid(theme, puzzle, current, image):
+	''' Подсвечивает неверные цифры '''
 	drawer = ImageDraw.Draw(image)
 	for i in range(9):
 		for j in range(9):
@@ -189,6 +195,7 @@ def fill_ivalid(theme, puzzle: list, current: list, image):
 
 
 def fill_numbers(theme, puzzle, current, solution, image):
+	''' Заполняет цифры '''
 	drawer = ImageDraw.Draw(image)
 	for i in range(puzzle.size):
 		for j in range(puzzle.size):
@@ -212,6 +219,7 @@ def fill_numbers(theme, puzzle, current, solution, image):
 
 
 def fill_all_possible(theme, puzzle, current, image):
+	''' Рисует все вставки '''
 	drawer = ImageDraw.Draw(image)
 	for i in range(9):
 		for j in range(9):
@@ -219,7 +227,15 @@ def fill_all_possible(theme, puzzle, current, image):
 				fill_possible(theme, j, i, current, image)
 
 
-def draw(puzzle: list=None, current: list=None, solution: list=None, possible: bool=False, correct: bool=False, solved: bool=False, theme='classic'):
+def draw(puzzle: list=None,  # Исходное судоку
+		 current: list=None,  # Заполняемое судоку
+		 solution: list=None,  # Решенное судоку
+		 possible: bool=False,  # Отображать ли вставки
+		 correct: bool=False,  # Подсвечивать ли правильные
+		 solved: bool=False,  # ОТображать сразу решенное
+		 theme='classic'  # Название темы
+		 ):
+	''' Главная отрисовочная функция '''
 	theme = THEMES[theme]
 	image = Image.new('RGB', (im_size, im_size), theme['image_color'])
 
