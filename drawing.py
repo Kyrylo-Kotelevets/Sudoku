@@ -1,9 +1,10 @@
 from PIL import Image, ImageDraw, ImageFont
-from DBMS import ROOT, load
+from sudoku import sudoku
 from os import sep
-import sudoku
 import math
 
+
+ROOT = "files"
 b_border = 14
 s_border = 4
 width = 200
@@ -104,16 +105,20 @@ def draw_highlight(x, y, theme, color, image):
 		drawer.ellipse(R(x, y), fill=color)
 
 
-def fill_possible(theme, x0: int, y0: int, puzzle: list, image):
+def fill_possible(theme, x0: int, y0: int, puzz: list, image):
 	drawer = ImageDraw.Draw(image)
-	possible = sudoku.get_block_possible(y0, x0, puzzle)
+	possible = sudoku.possible_matrix(puzzle=puzz.puzzle,
+									  row=y0,
+									  col=x0, 
+									  n=puzz.n)
+
 	for i in range(3):
 		for j in range(3):
 			x = X(x0) + theme['s_font_start'][0] + j * theme['s_font_padding'][0]
 			y = Y(y0) + theme['s_font_start'][1] + i * theme['s_font_padding'][1]
 			num = possible[i][j]
 
-			if num != 0:
+			if num != sudoku.UNASSIGNED:
 				if theme['possible_border']:
 					drawer.text((x - theme['possible_border_size'], y - theme['possible_border_size']), str(num), font=theme['t_font'], fill=theme['possible_border_color'])
 				drawer.text((x, y), str(num), font=theme['s_font'], fill=theme['possible_color'][num])
@@ -157,60 +162,60 @@ def fill_ivalid(theme, puzzle: list, current: list, image):
 	drawer = ImageDraw.Draw(image)
 	for i in range(9):
 		for j in range(9):
-			if current[i][j] == sudoku.UNASSIGNED:
+			if current[i, j] == sudoku.UNASSIGNED:
 				continue
 
 			for k in range(9):
-				if current[i][k] == current[i][j] and k != j:
-					if current[i][j] != puzzle[i][j]:
+				if current[i, k] == current[i, j] and k != j:
+					if current[i, j] != puzzle[i, j]:
 						draw_highlight(j, i, theme=theme, color=theme['invalid_color'], image=image)
-					if current[i][k] != puzzle[i][k]:
+					if current[i, k] != puzzle[i, k]:
 						draw_highlight(k, i, theme=theme, color=theme['invalid_color'], image=image)
-				if current[k][j] == current[i][j] and k != i:
-					if current[i][j] != puzzle[i][j]:
+				if current[k, j] == current[i, j] and k != i:
+					if current[i, j] != puzzle[i, j]:
 						draw_highlight(j, i, theme=theme, color=theme['invalid_color'], image=image)
-					if current[k][j] != puzzle[k][j]:
+					if current[k, j] != puzzle[k, j]:
 						draw_highlight(j, k, theme=theme, color=theme['invalid_color'], image=image)
 
 			row = 3 * (i // 3)
 			col = 3 * (j // 3)
 			for r in range(row, row + 3):
 				for c in range(col, col + 3):
-					if current[r][c] == current[i][j] and (r != i or c != j):
-						if current[i][j] != puzzle[i][j]:
+					if current[r, c] == current[i, j] and (r != i or c != j):
+						if current[i, j] != puzzle[i, j]:
 							draw_highlight(j, i, theme=theme, color=theme['invalid_color'], image=image)
-						if current[r][c] != puzzle[r][c]:
+						if current[r, c] != puzzle[r, c]:
 							draw_highlight(c, r, theme=theme, color=theme['invalid_color'], image=image)
 
 
-def fill_numbers(theme, puzzle: list, current: list, solution: list, image):
+def fill_numbers(theme, puzzle, current, solution, image):
 	drawer = ImageDraw.Draw(image)
-	for i in range(9):
-		for j in range(9):
+	for i in range(puzzle.size):
+		for j in range(puzzle.size):
 			x, y = X(j), Y(i)
 
-			if puzzle[i][j] != sudoku.UNASSIGNED:
+			if puzzle[i, j] != sudoku.UNASSIGNED:
 				x, y = x + theme['b_font_padding'][0], y + theme['b_font_padding'][1]
-				drawer.text((x, y), str(puzzle[i][j]), font=theme['b_font'], fill=theme['start_num_color'])
-			elif puzzle[i][j] == sudoku.UNASSIGNED and current[i][j] != 0:
+				drawer.text((x, y), str(puzzle[i, j]), font=theme['b_font'], fill=theme['start_num_color'])
+			elif puzzle[i, j] == sudoku.UNASSIGNED and current[i, j] != 0:
 				x, y = x + theme['f_font_padding'][0], y + theme['f_font_padding'][1]
-				if not solution:
-					drawer.text((x, y), str(current[i][j]), font=theme['f_font'], fill=theme['filled_num_color'])
-				elif current[i][j] == solution[i][j]:
+				if solution is None:
+					drawer.text((x, y), str(current[i, j]), font=theme['f_font'], fill=theme['filled_num_color'])
+				elif current[i, j] == solution[i, j]:
 					draw_highlight(j, i, theme=theme, color=theme['correct_block_color'], image=image)
-					drawer.text((x, y), str(current[i][j]), font=theme['f_font'], fill=theme['correct_num_color'])
-				elif current[i][j] != sudoku.UNASSIGNED:
+					drawer.text((x, y), str(current[i, j]), font=theme['f_font'], fill=theme['correct_num_color'])
+				elif current[i, j] != sudoku.UNASSIGNED:
 					draw_highlight(j, i, theme=theme, color=theme['wrong_block_color'], image=image)
-					drawer.text((x, y), str(current[i][j]), font=theme['f_font'], fill=theme['wrong_num_color'])
+					drawer.text((x, y), str(current[i, j]), font=theme['f_font'], fill=theme['wrong_num_color'])
 				else:
 					pass
 
 
-def fill_all_possible(theme, puzzle: list, current: list, image):
+def fill_all_possible(theme, puzzle, current, image):
 	drawer = ImageDraw.Draw(image)
 	for i in range(9):
 		for j in range(9):
-			if puzzle[i][j] == sudoku.UNASSIGNED and current[i][j] == sudoku.UNASSIGNED:
+			if puzzle[i, j] == sudoku.UNASSIGNED and current[i, j] == sudoku.UNASSIGNED:
 				fill_possible(theme, j, i, current, image)
 
 
@@ -221,7 +226,7 @@ def draw(puzzle: list=None, current: list=None, solution: list=None, possible: b
 	if theme['blocks']:
 		color_blocks(theme, image=image)
 
-	if not sudoku.is_correct(current):
+	if not sudoku.is_valid(current.puzzle):
 		fill_ivalid(theme, puzzle=puzzle, current=current, image=image)
 	
 	if possible:
@@ -229,7 +234,7 @@ def draw(puzzle: list=None, current: list=None, solution: list=None, possible: b
 	
 	if correct:
 		fill_numbers(theme, puzzle=puzzle, current=current,  solution=solution, image=image)
-	elif solved or (sudoku.is_solved(current) and sudoku.are_equal(current, solution, 3)):
+	elif solved or (current.is_solved() and current.are_equal(solution)):
 		fill_numbers(theme, puzzle=puzzle, current=solution, solution=None, image=image)
 	else:
 		fill_numbers(theme, puzzle=puzzle, current=current,  solution=None, image=image)
@@ -241,10 +246,3 @@ def draw(puzzle: list=None, current: list=None, solution: list=None, possible: b
 
 	image.show()
 	image.save(ROOT + sep + 'sudoku.png')
-
-
-
-#puzzle, current, solution = load(n=3)
-#draw(puzzle=puzzle, current=current, possible=True)
-
-# python C:\Users\HP_650\Desktop\Судоку\drawing.py

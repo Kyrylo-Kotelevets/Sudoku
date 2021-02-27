@@ -1,7 +1,7 @@
 import drawing
-import DBMS
+import sudoku
 
-sudoku = [[1, 0, 0, 0, 0, 0, 0, 0, 6],
+puzzle = [[1, 0, 0, 0, 0, 0, 0, 0, 6],
 		  [0, 5, 0, 9, 0, 2, 0, 8, 0],
 		  [8, 0, 3, 0, 0, 0, 5, 0, 1],
 		  [0, 0, 0, 8, 4, 5, 0, 0, 0],
@@ -11,6 +11,9 @@ sudoku = [[1, 0, 0, 0, 0, 0, 0, 0, 6],
 		  [0, 6, 0, 4, 0, 7, 0, 5, 0],
 		  [4, 0, 0, 0, 0, 0, 0, 0, 7]]
 
+initial = sudoku.sudoku(puzzle)
+current = initial.copy()
+current[0, 1] = 4
+current[1, 0] = 7
 
-# DBMS.upload(sudoku)
-drawing.draw(*DBMS.load(), correct=True, theme='paper')
+drawing.draw(initial, current, initial.solution(), possible=True, theme='paper')
