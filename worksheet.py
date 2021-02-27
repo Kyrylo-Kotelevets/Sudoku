@@ -16,4 +16,4 @@ current = initial.copy()
 current[0, 1] = 4
 current[1, 0] = 7
 
-drawing.draw(initial, current, initial.solution(), possible=True, theme='paper')
+drawing.draw(initial, current, initial.solution(), solved=True, theme='paper')
