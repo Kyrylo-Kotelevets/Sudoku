@@ -13,4 +13,4 @@ A correctly formed puzzle has only one solution.
 
 The best solution is to write down the candidate numbers at the top of the left corner of the cell, and then cross out the impossible numbers from this cell. After that, you can see exactly the numbers that can occupy this cell. Playing Sudoku slowly is recommended as it is a relaxing game.
 
-
+Below are examples of rendered puzzles in different variations:
