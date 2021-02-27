@@ -16,6 +16,9 @@ The best solution is to write down the candidate numbers at the top of the left 
 Below are examples of rendered puzzles in different variations:
 ## Classic empty and solved puzzle
 ![there must be a beatiful image](https://github.com/Kyrylo-Kotelevets/Sudoku/blob/main/files/solved_and_empty.png)
- 
+## Stack display mode
+![there must be a beatiful image](https://github.com/Kyrylo-Kotelevets/Sudoku/blob/main/files/sudoku_possible.png)
+## Backlight mode
+![there must be a beatiful image](https://github.com/Kyrylo-Kotelevets/Sudoku/blob/main/files/backlight.png)
 ## Themes variations
 ![there must be a beatiful image](https://github.com/Kyrylo-Kotelevets/Sudoku/blob/main/files/themes.png)
