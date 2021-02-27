@@ -20,4 +20,4 @@ current = initial.copy()
 #current[3, 2] = 1
 #current[4, 3] = 7
 
-drawing.draw(initial, current, initial.solution(), correct=True, theme='paper')
+drawing.draw(initial, current, initial.solution(), possible=True, theme='paper')
