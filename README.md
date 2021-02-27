@@ -15,4 +15,4 @@ The best solution is to write down the candidate numbers at the top of the left 
 
 Below are examples of rendered puzzles in different variations:
 ## Sierpinski triangle
- ![there must be a beatiful image](https://github.com/Kyrylo-Kotelevets/Sudoku/blob/master/files/sudoku.jpg)
+ ![there must be a beatiful image](https://github.com/Kyrylo-Kotelevets/Sudoku/blob/main/files/sudoku.png)
