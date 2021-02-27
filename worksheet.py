@@ -13,7 +13,11 @@ puzzle = [[1, 0, 0, 0, 0, 0, 0, 0, 6],
 
 initial = sudoku.sudoku(puzzle)
 current = initial.copy()
-current[0, 1] = 4
-current[1, 0] = 7
+#current[0, 1] = 7
+#current[1, 0] = 4
+#current[6, 5] = 7
+#current[5, 6] = 1
+#current[3, 2] = 1
+#current[4, 3] = 7
 
-drawing.draw(initial, current, initial.solution(), solved=True, theme='paper')
+drawing.draw(initial, current, initial.solution(), correct=True, theme='paper')
